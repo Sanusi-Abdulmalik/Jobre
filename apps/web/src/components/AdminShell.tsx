@@ -26,7 +26,7 @@ import {
 const NAV_ITEMS = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/sources", label: "Sources & Discovery", icon: Globe },
-  { href: "/admin/coverage", label: "Platform Coverage (78)", icon: Grid },
+  { href: "/admin/platform-coverage", label: "Platform Coverage (78)", icon: Grid },
   { href: "/admin/connectors", label: "Connector Health", icon: PlugZap },
   { href: "/admin/runs", label: "Ingestion Runs", icon: PlayCircle },
   { href: "/admin/jobs", label: "Job Records", icon: Briefcase },

@@ -7,6 +7,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/admin/coverage",
+        destination: "/admin/platform-coverage",
+      },
+      {
         source: "/api/v1/:path*",
         destination: `${apiTarget}/api/v1/:path*`,
       },

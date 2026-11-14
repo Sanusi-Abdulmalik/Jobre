@@ -164,7 +164,7 @@ export default function AdminOverviewPage() {
               Jobs Indexed by Verified Platform
             </h2>
             <Link
-              href="/admin/coverage"
+              href="/admin/platform-coverage"
               className="text-xs font-semibold text-blue-600 hover:underline"
             >
               View 78-platform matrix →
