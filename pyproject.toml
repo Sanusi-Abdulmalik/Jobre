@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jobre"
+version = "1.0.0"
+description = "Jobre — Universal Job Board Indexer. One index. Every opportunity."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Jobre Engineering" }]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "alembic>=1.14.0",
+    "psycopg[binary]>=3.2.3",
+    "asyncpg>=0.30.0",
+    "aiosqlite>=0.20.0",
+    "httpx>=0.28.0",
+    "beautifulsoup4>=4.12.3",
+    "lxml>=5.3.0",
+    "bleach>=6.1.0",
+    "rapidfuzz>=3.10.0",
+    "opensearch-py[async]>=2.7.1",
+    "redis>=5.2.0",
+    "python-dateutil>=2.9.0",
+    "prometheus-client>=0.21.0",
+    "python-json-logger>=2.0.7",
+    "python-multipart>=0.0.12",
+    "orjson>=3.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["packages*", "apps*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests", "apps/api/tests", "packages/connectors/tests"]
+pythonpath = [".", "apps/api"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]

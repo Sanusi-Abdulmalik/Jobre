@@ -1,0 +1,1 @@
+"""Jobre API app root."""

@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-blue-600 selection:text-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+.prose-job h1, .prose-job h2, .prose-job h3, .prose-job h4 {
+  @apply font-semibold text-slate-900 mt-5 mb-2;
+}
+.prose-job p {
+  @apply text-slate-700 leading-relaxed mb-3;
+}
+.prose-job ul {
+  @apply list-disc pl-5 mb-3 space-y-1 text-slate-700;
+}
+.prose-job ol {
+  @apply list-decimal pl-5 mb-3 space-y-1 text-slate-700;
+}
+.prose-job a {
+  @apply text-blue-600 underline hover:text-blue-800;
+}

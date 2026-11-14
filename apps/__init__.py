@@ -1,0 +1,1 @@
+"""Jobre FastAPI application package."""

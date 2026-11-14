@@ -1,0 +1,62 @@
+name: Jobre CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: jobre
+          POSTGRES_PASSWORD: jobre_ci_password
+          POSTGRES_DB: jobre_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7.4-alpine
+        ports:
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+      - name: Initialize extensions & migrate
+        env:
+          DATABASE_URL: postgresql+psycopg://jobre:jobre_ci_password@127.0.0.1:5432/jobre_test
+        run: |
+          PGPASSWORD=jobre_ci_password psql -h 127.0.0.1 -U jobre -d jobre_test -c "CREATE EXTENSION IF NOT EXISTS pg_trgm; CREATE EXTENSION IF NOT EXISTS unaccent;"
+          PYTHONPATH=.:apps/api alembic -c apps/api/alembic.ini upgrade head
+      - name: Run pytest suite
+        env:
+          DATABASE_URL: postgresql+psycopg://jobre:jobre_ci_password@127.0.0.1:5432/jobre_test
+          TEST_DATABASE_URL: postgresql+psycopg://jobre:jobre_ci_password@127.0.0.1:5432/jobre_test
+          REDIS_URL: redis://127.0.0.1:6379/0
+        run: PYTHONPATH=.:apps/api pytest -v
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install & Typecheck Next.js Web App
+        working-directory: apps/web
+        run: |
+          npm ci
+          npx tsc --noEmit
+          npm run build

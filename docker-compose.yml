@@ -1,0 +1,159 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: jobre-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-jobre}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jobre_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-jobre}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jobre} -d ${POSTGRES_DB:-jobre}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: jobre-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "512mb", "--maxmemory-policy", "noeviction"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  opensearch:
+    image: opensearchproject/opensearch:2.17.1
+    container_name: jobre-opensearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_ADMIN_PASSWORD:-JobreSearch#2026!}
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  minio:
+    image: minio/minio:latest
+    container_name: jobre-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-minioadmin_secret}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: jobre-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-jobre}:${POSTGRES_PASSWORD:-jobre_secret}@postgres:5432/${POSTGRES_DB:-jobre}
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: "true"
+      OPENSEARCH_ENABLED: "true"
+      OPENSEARCH_URL: http://opensearch:9200
+      RAW_STORAGE_BACKEND: local
+      RAW_STORAGE_PATH: /app/data/raw_snapshots
+      JOBRE_ADMIN_API_KEY: ${JOBRE_ADMIN_API_KEY:-jobre-admin-2026}
+    ports:
+      - "8000:8000"
+    volumes:
+      - raw_snapshots:/app/data/raw_snapshots
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: jobre-worker
+    restart: unless-stopped
+    command: ["python", "-m", "apps.workers.main"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-jobre}:${POSTGRES_PASSWORD:-jobre_secret}@postgres:5432/${POSTGRES_DB:-jobre}
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: "true"
+      OPENSEARCH_ENABLED: "true"
+      OPENSEARCH_URL: http://opensearch:9200
+      RAW_STORAGE_BACKEND: local
+      RAW_STORAGE_PATH: /app/data/raw_snapshots
+      JOBRE_ADMIN_API_KEY: ${JOBRE_ADMIN_API_KEY:-jobre-admin-2026}
+    volumes:
+      - raw_snapshots:/app/data/raw_snapshots
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: jobre-web
+    restart: unless-stopped
+    environment:
+      API_INTERNAL_URL: http://api:8000
+      NEXT_PUBLIC_APP_NAME: Jobre
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: jobre-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: jobre-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data:
+  redis_data:
+  opensearch_data:
+  minio_data:
+  raw_snapshots:

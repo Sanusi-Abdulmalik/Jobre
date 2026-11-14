@@ -1,0 +1,240 @@
+[
+  {
+    "source_url": "https://boards.greenhouse.io/cloudflare",
+    "company_name": "Cloudflare",
+    "source_name": "Cloudflare (Greenhouse)",
+    "platform_key": "greenhouse",
+    "board_token": "cloudflare",
+    "priority": "HIGH",
+    "max_jobs": 35
+  },
+  {
+    "source_url": "https://boards.greenhouse.io/pelago",
+    "company_name": "Pelago",
+    "source_name": "Pelago (Greenhouse)",
+    "platform_key": "greenhouse",
+    "board_token": "pelago",
+    "priority": "NORMAL",
+    "max_jobs": 25
+  },
+  {
+    "source_url": "https://jobs.ashbyhq.com/linear",
+    "company_name": "Linear",
+    "source_name": "Linear (Ashby)",
+    "platform_key": "ashby",
+    "board_token": "linear",
+    "priority": "HIGH",
+    "max_jobs": 30
+  },
+  {
+    "source_url": "https://jobs.ashbyhq.com/tldr.tech",
+    "company_name": "TLDR",
+    "source_name": "TLDR (Ashby)",
+    "platform_key": "ashby",
+    "board_token": "tldr.tech",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://jobs.lever.co/patchmypc",
+    "company_name": "Patch My PC",
+    "source_name": "Patch My PC (Lever)",
+    "platform_key": "lever",
+    "board_token": "patchmypc",
+    "priority": "NORMAL",
+    "max_jobs": 25
+  },
+  {
+    "source_url": "https://jobs.lever.co/sep",
+    "company_name": "SEP",
+    "source_name": "SEP (Lever)",
+    "platform_key": "lever",
+    "board_token": "sep",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://careers.smartrecruiters.com/BoschGroup",
+    "company_name": "Bosch Group",
+    "source_name": "Bosch Group (SmartRecruiters)",
+    "platform_key": "smartrecruiters",
+    "board_token": "BoschGroup",
+    "priority": "HIGH",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://apply.workable.com/credence/",
+    "company_name": "Credence Management Solutions",
+    "source_name": "Credence (Workable)",
+    "platform_key": "workable",
+    "board_token": "credence",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://constructivedialogue.recruitee.com",
+    "company_name": "Constructive Dialogue Institute",
+    "source_name": "Constructive Dialogue Institute (Recruitee)",
+    "platform_key": "recruitee",
+    "board_token": "constructivedialogue",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://reploidgroupag.recruitee.com",
+    "company_name": "REPLOID Group AG",
+    "source_name": "REPLOID Group AG (Recruitee)",
+    "platform_key": "recruitee",
+    "board_token": "reploidgroupag",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://ishir.breezy.hr",
+    "company_name": "ISHIR",
+    "source_name": "ISHIR (Breezy HR)",
+    "platform_key": "breezy_hr",
+    "board_token": "ishir",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://ardentprinciples.pinpointhq.com",
+    "company_name": "Ardent Principles",
+    "source_name": "Ardent Principles (Pinpoint)",
+    "platform_key": "pinpoint",
+    "board_token": "ardentprinciples",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://personio-gmbh.jobs.personio.de",
+    "company_name": "Personio",
+    "source_name": "Personio GmbH (Personio XML)",
+    "platform_key": "personio",
+    "board_token": "personio-gmbh.de",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site",
+    "company_name": "Salesforce",
+    "source_name": "Salesforce (Workday)",
+    "platform_key": "workday",
+    "board_token": "salesforce|wd12|External_Career_Site",
+    "priority": "HIGH",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://jobs.polymer.co/foray-bioscience",
+    "company_name": "Foray Bioscience",
+    "source_name": "Foray Bioscience (Polymer)",
+    "platform_key": "polymer",
+    "board_token": "foray-bioscience",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://jobs.polymer.co/lighten",
+    "company_name": "Lighten",
+    "source_name": "Lighten (Polymer)",
+    "platform_key": "polymer",
+    "board_token": "lighten",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://jobs.gem.com/nominal",
+    "company_name": "Nominal",
+    "source_name": "Nominal (Gem.com)",
+    "platform_key": "gem",
+    "board_token": "nominal",
+    "priority": "HIGH",
+    "max_jobs": 25
+  },
+  {
+    "source_url": "https://career.teamtailor.com/jobs",
+    "company_name": "Teamtailor",
+    "source_name": "Teamtailor Careers (Teamtailor)",
+    "platform_key": "teamtailor",
+    "board_token": "career",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://www.careers-page.com/bridgepoint-works",
+    "company_name": "BridgePoint Works",
+    "source_name": "BridgePoint Works (Manatal)",
+    "platform_key": "manatal",
+    "board_token": "bridgepoint-works",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://betterrx.applytojob.com/apply",
+    "company_name": "BetterRX",
+    "source_name": "BetterRX (JazzHR)",
+    "platform_key": "jazzhr",
+    "board_token": "betterrx",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://whatfix101.hire.trakstar.com/",
+    "company_name": "Whatfix",
+    "source_name": "Whatfix (Trakstar)",
+    "platform_key": "trakstar",
+    "board_token": "whatfix101",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  },
+  {
+    "source_url": "https://elasticpath.bamboohr.com/careers",
+    "company_name": "Elastic Path",
+    "source_name": "Elastic Path (BambooHR)",
+    "platform_key": "bamboohr",
+    "board_token": "elasticpath",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://jobs.exitfive.com",
+    "company_name": "Exit Five Job Board",
+    "source_name": "Exit Five B2B Marketing Jobs (Niceboard)",
+    "platform_key": "niceboard",
+    "priority": "HIGH",
+    "max_jobs": 25
+  },
+  {
+    "source_url": "https://www.cancercareers.org/jobs.rss",
+    "company_name": "AACR CancerCareers",
+    "source_name": "AACR CancerCareers (JobBoard.io)",
+    "platform_key": "jobboard_io",
+    "priority": "NORMAL",
+    "max_jobs": 20
+  },
+  {
+    "source_url": "https://master.mysmartjobboard.net",
+    "company_name": "Association Industry Careers",
+    "source_name": "Association Careers (SmartJobBoard)",
+    "platform_key": "smartjobboard",
+    "priority": "NORMAL",
+    "max_jobs": 12
+  },
+  {
+    "source_url": "https://etcareers.com",
+    "company_name": "ETCareers",
+    "source_name": "ETCareers Job Board (Jobboardly)",
+    "platform_key": "jobboardly",
+    "priority": "NORMAL",
+    "max_jobs": 10
+  },
+  {
+    "source_url": "https://cycle-jobs.com",
+    "company_name": "Cycle-Jobs",
+    "source_name": "Cycle-Jobs Cycling Industry Board (WP Job Manager)",
+    "platform_key": "wp_job_manager",
+    "priority": "NORMAL",
+    "max_jobs": 15
+  }
+]

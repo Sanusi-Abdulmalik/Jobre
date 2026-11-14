@@ -1,0 +1,58 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 2,
+      "number_of_replicas": 0,
+      "refresh_interval": "5s"
+    },
+    "analysis": {
+      "analyzer": {
+        "job_text_analyzer": {
+          "type": "standard",
+          "stopwords": "_english_"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "canonical_job_key": { "type": "keyword" },
+      "title": {
+        "type": "text",
+        "analyzer": "job_text_analyzer",
+        "fields": { "keyword": { "type": "keyword", "ignore_above": 256 } }
+      },
+      "normalized_title": { "type": "text" },
+      "company_id": { "type": "keyword" },
+      "company_name": {
+        "type": "text",
+        "fields": { "keyword": { "type": "keyword", "ignore_above": 256 } }
+      },
+      "department": { "type": "keyword" },
+      "description_text": { "type": "text", "analyzer": "job_text_analyzer" },
+      "location_raw": {
+        "type": "text",
+        "fields": { "keyword": { "type": "keyword", "ignore_above": 256 } }
+      },
+      "city": { "type": "keyword" },
+      "region": { "type": "keyword" },
+      "country": { "type": "keyword" },
+      "country_code": { "type": "keyword" },
+      "employment_type": { "type": "keyword" },
+      "workplace_type": { "type": "keyword" },
+      "salary_min": { "type": "double" },
+      "salary_max": { "type": "double" },
+      "salary_currency": { "type": "keyword" },
+      "salary_period": { "type": "keyword" },
+      "status": { "type": "keyword" },
+      "platforms": { "type": "keyword" },
+      "source_count": { "type": "integer" },
+      "primary_application_url": { "type": "keyword", "index": false },
+      "primary_source_url": { "type": "keyword", "index": false },
+      "original_posted_at": { "type": "date" },
+      "first_seen_at": { "type": "date" },
+      "last_seen_at": { "type": "date" }
+    }
+  }
+}
