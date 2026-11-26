@@ -2,11 +2,11 @@
 
 ## 1. Architectural Philosophy
 
-Jobre follows a **Modular Monolith + Async Worker** architecture designed for high throughput, operational simplicity, strict data provenance, and zero-data-loss resilience:
+Jobre follows a **Modular Monolith + Async Worker** architecture designed for high throughput, operational simplicity, and strict data provenance. PostgreSQL provides the durable system of record; the current Redis list consumer is best-effort and does not yet provide crash-safe task delivery:
 
 1. **PostgreSQL 17 is the Canonical System of Record.** Every platform, company, source, raw payload pointer, normalized job, source-to-job provenance link, duplicate group, field diff, ingestion run, connector health state, and verification evidence record is stored transactionally in PostgreSQL.
 2. **Derived & Rebuildable Search Index.** Search is served via `SearchCoordinator` (`packages/search/engine.py`), which writes to **OpenSearch 2.x** when enabled and seamlessly falls back to **PostgreSQL 17 Full-Text Search (`tsvector` + `GIN`) and `pg_trgm`** if OpenSearch is disabled or temporarily unreachable. A complete search index can be reconstructed from PostgreSQL at any time (`POST /api/v1/admin/search/rebuild` or `scripts/rebuild_search_index.py`).
-3. **Raw-First Ingestion.** Connectors never mutate canonical jobs directly. Every run writes compressed raw snapshots (`gzip` JSON in local object store or S3/MinIO) and `raw_job_records` SHA-256 digests **before** normalization runs.
+3. **Raw-First Ingestion.** Connectors never mutate canonical jobs directly. Every run writes compressed raw snapshots (`gzip` JSON in the local filesystem store) and `raw_job_records` SHA-256 digests **before** normalization runs. S3/MinIO settings and the Compose service are scaffolding only; remote object storage is not implemented yet.
 
 ---
 
@@ -60,5 +60,5 @@ Jobre follows a **Modular Monolith + Async Worker** architecture designed for hi
 
 ## 3. Why Not Kafka, Kubernetes, or Headless Browsers by Default?
 
-- **Redis Priority Lists vs. Kafka:** At 10,000–50,000 sources refreshed every 2–12 hours (~1–5 source runs/sec), Redis `BLPOP` queues (`HIGH`/`NORMAL`/`LOW` + `DLQ`) with PostgreSQL lease locks deliver sub-millisecond dispatch at <1% of the memory and operational overhead of a JVM/KRaft Kafka cluster.
+- **Redis Priority Lists vs. Kafka:** Redis `BLPOP` queues (`HIGH`/`NORMAL`/`LOW` + `DLQ`) provide simple priority dispatch. However, `BLPOP` removes a task before processing, so a worker crash can lose that task; the current implementation is not crash-safe until acknowledgement and pending-task recovery are added. Source lease acquisition also needs an atomic database update before concurrent worker scaling can be considered safe.
 - **Public Structured Feeds vs. Playwright:** All 22 verified connectors extract structured JSON, XML, RSS, or server-rendered JSON-LD over lightweight async HTTP (`httpx`), achieving 300ms–3s run times per source without headless Chromium memory spikes or anti-bot evasion.

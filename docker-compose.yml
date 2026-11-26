@@ -66,6 +66,19 @@ services:
     volumes:
       - minio_data:/data
 
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: jobre-migrate
+    command: ["alembic", "-c", "apps/api/alembic.ini", "upgrade", "head"]
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-jobre}:${POSTGRES_PASSWORD:-jobre_secret}@postgres:5432/${POSTGRES_DB:-jobre}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api:
     build:
       context: .
@@ -92,12 +105,13 @@ services:
         condition: service_healthy
       opensearch:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   worker:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    container_name: jobre-worker
     restart: unless-stopped
     command: ["python", "-m", "apps.workers.main"]
     environment:
@@ -116,15 +130,19 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        INTERNAL_API_URL: http://api:8000
     container_name: jobre-web
     restart: unless-stopped
     environment:
-      API_INTERNAL_URL: http://api:8000
+      INTERNAL_API_URL: http://api:8000
       NEXT_PUBLIC_APP_NAME: Jobre
     ports:
       - "3000:3000"

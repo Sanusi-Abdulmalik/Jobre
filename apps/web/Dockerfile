@@ -1,10 +1,12 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY apps/web/package.json apps/web/package-lock.json* ./
-RUN npm install
+RUN npm ci
 
 FROM node:20-alpine AS builder
 WORKDIR /app
+ARG INTERNAL_API_URL=http://127.0.0.1:8000
+ENV INTERNAL_API_URL=${INTERNAL_API_URL}
 COPY --from=deps /app/node_modules ./node_modules
 COPY apps/web ./
 RUN npm run build

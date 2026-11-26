@@ -11,7 +11,9 @@ PYTHONPATH=.:apps/api pytest -v
 
 ---
 
-## 2. Mapping to the 14 Mandatory Acceptance Tests
+## 2. Mapping to the 14 Acceptance Requirements
+
+The table below maps 14 acceptance requirements to the current automated checks. These are requirements/scenarios, not 14 separate pytest functions; the current archive contains 9 test functions across the four test modules.
 
 | # | Acceptance Requirement | Test Module & Function | Verified Outcome |
 |---:|---|---|---|

@@ -2,20 +2,37 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from packages.common.config import PROJECT_ROOT
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
-# Point test suite strictly at isolated jobre_test database and isolated raw snapshot directory
+from packages.common.config import Settings
+
+# Keep tests isolated from the developer database and make paths portable across
+# local machines and CI runners. TEST_DATABASE_URL may be supplied by CI; the
+# application uses SQLAlchemy's async engine, so normalize sync PostgreSQL DSNs.
+def _async_database_url(url: str) -> str:
+    if url.startswith("postgresql+psycopg://"):
+        return url.replace("postgresql+psycopg://", "postgresql+asyncpg://", 1)
+    if url.startswith("postgresql://"):
+        return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+asyncpg://", 1)
+    if url.startswith("postgresql+asyncpg://"):
+        return url
+    raise ValueError("TEST_DATABASE_URL must be a PostgreSQL URL supported by asyncpg.")
+
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-TEST_DB_URL = "postgresql+asyncpg://jobre@127.0.0.1:5432/jobre_test"
+TEST_DB_URL = _async_database_url(
+    os.environ.get("TEST_DATABASE_URL") or Settings().test_database_url
+)
 TEST_RAW_DIR = PROJECT_ROOT / "data" / "raw_snapshots_test"
-TEST_RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 os.environ["DATABASE_URL"] = TEST_DB_URL
-os.environ["JOBRE_RAW_STORAGE_PATH"] = str(TEST_RAW_DIR)
+# Settings.raw_storage_path maps to RAW_STORAGE_PATH (not JOBRE_RAW_STORAGE_PATH).
+os.environ["RAW_STORAGE_PATH"] = str(TEST_RAW_DIR)
 os.environ["JOBRE_ADMIN_API_KEY"] = "test-admin-secret-key"
 
 from packages.common.config import get_settings  # noqa: E402
