@@ -14,7 +14,7 @@ services:
       - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jobre} -d ${POSTGRES_DB:-jobre}"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 10
 
@@ -29,9 +29,10 @@ services:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
       timeout: 3s
       retries: 10
+      start_period: 60s
 
   opensearch:
     image: opensearchproject/opensearch:2.17.1
@@ -53,7 +54,7 @@ services:
       retries: 15
 
   minio:
-    image: minio/minio:latest
+    image: docker.io/pgsty/silo:latest
     container_name: jobre-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
@@ -95,7 +96,7 @@ services:
       RAW_STORAGE_PATH: /app/data/raw_snapshots
       JOBRE_ADMIN_API_KEY: ${JOBRE_ADMIN_API_KEY:-jobre-admin-2026}
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - raw_snapshots:/app/data/raw_snapshots
     depends_on:
