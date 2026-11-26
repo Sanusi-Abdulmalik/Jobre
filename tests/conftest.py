@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from packages.common.config import PROJECT_ROOT
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
 # Point test suite strictly at isolated jobre_test database and isolated raw snapshot directory
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TEST_DB_URL = "postgresql+asyncpg://jobre@127.0.0.1:5432/jobre_test"
-TEST_RAW_DIR = Path("/home/user/jobre/data/raw_snapshots_test")
+TEST_RAW_DIR = PROJECT_ROOT / "data" / "raw_snapshots_test"
+TEST_RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 os.environ["DATABASE_URL"] = TEST_DB_URL
 os.environ["JOBRE_RAW_STORAGE_PATH"] = str(TEST_RAW_DIR)
